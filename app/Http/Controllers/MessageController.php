@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MessageController extends Controller
 {
     public function store(Request $request)
     {
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
         $validator = Validator::make($request->all(), [
             'content' => 'required|string|max:255',
             'receiver_id' => 'required|exists:users,id',
-            'sender_id' => 'required|exists:users,id', // Optional, if you want to allow sender_id to be set
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -25,7 +32,7 @@ class MessageController extends Controller
         $message = Message::create([
             'content' => $request->content,
             'receiver_id' => $request->receiver_id,
-            'sender_id' => $request->sender_id, // Assuming sender_id is the user sending the message
+            'sender_id' => $user->id
         ]);
 
         return response()->json([
