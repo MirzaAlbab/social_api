@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::prefix('posts')->group(function () {
     Route::get('/', [PostController::class, 'index']);
-    Route::post('/', );
+    Route::post('/', [PostController::class, 'store']);
     Route::get('/{post}', 'PostController@show');
     Route::put('/{post}', 'PostController@update');
     Route::delete('/{post}', 'PostController@destroy');
