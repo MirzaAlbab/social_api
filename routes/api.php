@@ -12,9 +12,9 @@ Route::prefix('v1')->group(function () {
     Route::prefix('posts')->group(function () {
     Route::get('/', [PostController::class, 'index']);
     Route::post('/', [PostController::class, 'store']);
-    Route::get('/{post}', 'PostController@show');
-    Route::put('/{post}', 'PostController@update');
-    Route::delete('/{post}', 'PostController@destroy');
+    Route::get('/{post}', [PostController::class, 'show']);
+    Route::put('/{post}', [PostController::class, 'update']);
+    Route::delete('/{post}', [PostController::class, 'destroy']);
 
     Route::prefix('{post}/comments')->group(function () {
         Route::get('/', 'CommentController@index');

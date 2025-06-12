@@ -46,4 +46,21 @@ class PostController extends Controller
             'data' => $post,
         ], 201);
     }
+
+    public function show($id)
+    {
+        // Fetch a single post by ID
+        $post = Post::with(['user', 'comments', 'likes'])->find($id);
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $post,
+        ], 200);
+    }
 }
