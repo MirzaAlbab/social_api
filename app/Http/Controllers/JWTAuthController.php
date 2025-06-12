@@ -34,4 +34,25 @@ class JWTAuthController extends Controller
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user','token'), 201);
     }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->only('email','password'), [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        return response()->json(compact('token'), 200);
+    }
 }
