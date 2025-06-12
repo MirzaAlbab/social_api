@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\JWTAuthController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
@@ -12,6 +13,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('v1')->group(function () {
+
+    Route::post('register', [JWTAuthController::class, 'register']);
+
     Route::prefix('posts')->group(function () {
     Route::get('/', [PostController::class, 'index']);
     Route::post('/', [PostController::class, 'store']);
